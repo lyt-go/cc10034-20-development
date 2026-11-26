@@ -8,6 +8,10 @@ from typing import Any
 
 from app.seed import SEED_ROWS
 
+# 复核领域的内部台账：不对外作为业务模块出现在运营概览与模块清单中，
+# 但仍通过 rows() 参与复核包/证据/申请的内存存储。
+INTERNAL_TABLES = {"review_package", "review_request", "param_evidence"}
+
 
 class Store:
     def __init__(self) -> None:
@@ -16,7 +20,7 @@ class Store:
         }
 
     def module_names(self) -> list[str]:
-        return sorted(self._tables)
+        return sorted(name for name in self._tables if name not in INTERNAL_TABLES)
 
     def rows(self, module: str) -> list[dict[str, Any]]:
         return self._tables.setdefault(module, [])

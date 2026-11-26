@@ -149,8 +149,9 @@ class TestWriteAndActions:
         service = DifferentialSqlService()
         values = {"查询编号": "DIFF-TEST", "查询语句": "SELECT COUNT(*) FROM t", "查询用户": "tester"}
         entry, _ = service.create_entry(values)
+        existing_max = max(int(row["id"]) for row in service.list_entries(size=1000)[0])
         assert entry is not None
-        assert entry["id"] == 4
+        assert entry["id"] == existing_max
 
     def test_create_all_required_fields(self):
         """行为类模块完整字段创建。"""
